@@ -1,0 +1,67 @@
+{% extends "core/base.html" %}
+{% block page %}home{% endblock %}
+
+{% block content %}
+{% if not profile.ready %}
+  <section class="intro">
+    <h1>Find the words people mishear when you speak</h1>
+    <p class="lede">Read short sentences out loud. Sayable listens with speech recognition, notes which
+      sounds get lost, and then checks your talks and interview answers for words that are likely to
+      trip you up.</p>
+    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="{{ progress.target }}" aria-valuenow="{{ progress.done }}">
+      <span style="width: {{ progress.percent }}%"></span>
+    </div>
+    <p class="muted">{{ progress.done }} of {{ progress.target }} sentences read.
+      {% if progress.done == 0 %}It takes about ten minutes, and you can stop at any time.{% else %}A few more and your first results appear here.{% endif %}</p>
+    <a class="button primary" href="{% url 'profile_session' %}">{% if progress.done %}Carry on reading{% else %}Start reading{% endif %}</a>
+  </section>
+{% else %}
+  <section>
+    <h1>Sounds that get misheard</h1>
+    {% if sounds %}
+      <p class="lede">Worst first. The percentage is how often a word with this sound was not heard
+        clearly, smoothed so that one bad take does not count for much.</p>
+      <ol class="sounds">
+        {% for sound in sounds %}
+          <li>
+            <div class="sound-head">
+              <strong class="sound-name">{{ sound.name }}</strong>
+              <span class="muted">as in “{{ sound.example }}”</span>
+              <span class="sound-rate">{{ sound.percent }}%</span>
+            </div>
+            <div class="bar"><span style="width: {{ sound.bar }}%"></span></div>
+            <p class="muted small">
+              {% if sound.heard_as %}Usually heard as {{ sound.heard_as|join:" or " }}. {% endif %}
+              {% if sound.problem_words %}Words: {{ sound.problem_words|join:", " }}.{% endif %}
+            </p>
+          </li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      <p class="lede">No sound stands out yet: you are being heard clearly. Keep reading, or check a
+        script to see words with sounds that are slightly harder for you.</p>
+    {% endif %}
+    <p><a class="button" href="{% url 'profile_session' %}">Read more sentences</a></p>
+  </section>
+{% endif %}
+
+<section class="scripts-block">
+  <div class="section-head">
+    <h2>Scripts</h2>
+    <a class="button" href="{% url 'script_new' %}">New script</a>
+  </div>
+  {% if scripts %}
+    <ul class="script-list">
+      {% for script in scripts %}
+        <li>
+          <a href="{% url 'script_edit' script.pk %}">{{ script.title }}</a>
+          <span class="muted small">edited {{ script.updated_at|timesince }} ago</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">Paste a presentation, an interview answer or a toast. Sayable marks the words you are
+      likely to be misheard on and suggests easier ones.</p>
+  {% endif %}
+</section>
+{% endblock %}

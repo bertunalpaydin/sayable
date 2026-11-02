@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+{% block title %}Rehearse {{ script.title }} · Sayable{% endblock %}
+{% block page %}rehearse{% endblock %}
+
+{% block content %}
+<p class="muted"><a href="{% url 'script_edit' script.pk %}">{{ script.title }}</a></p>
+<h1>Rehearse</h1>
+
+{{ pieces|json_script:"pieces" }}
+
+<section data-session data-kind="rehearsal" data-script-id="{{ script.pk }}" data-record-url="{% url 'api_record' %}">
+  <div class="piece-nav">
+    <button type="button" class="button small" data-prev>Previous part</button>
+    <p class="step" data-step></p>
+    <button type="button" class="button small" data-next>Next part</button>
+  </div>
+
+  <p class="reading piece marked" data-text></p>
+  <p class="muted small" data-prep-note hidden>Dotted words are ones you might be misheard on. Take them slowly.</p>
+
+  {% include "core/recorder.html" %}
+  {% include "core/result.html" %}
+
+  <div class="actions" data-after hidden>
+    <button type="button" class="button primary" data-continue>Next part</button>
+    <button type="button" class="button" data-again>Try again</button>
+  </div>
+  <p class="error" data-error role="alert" hidden></p>
+</section>
+{% endblock %}

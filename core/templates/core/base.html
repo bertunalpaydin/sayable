@@ -1,0 +1,43 @@
+{% load static %}<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Sayable{% endblock %}</title>
+  <link rel="manifest" href="{% url 'manifest' %}">
+  <meta name="theme-color" content="#0F6E6E">
+  <link rel="icon" href="{% static 'core/icons/icon-192.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'core/icons/apple-touch-icon.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap">
+  <link rel="stylesheet" href="{% static 'core/app.css' %}">
+  <script src="{% static 'core/app.js' %}" defer></script>
+</head>
+<body data-page="{% block page %}{% endblock %}">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site">
+    <a class="wordmark" href="{% url 'home' %}">Sayable</a>
+    {% if user.is_authenticated %}
+      {% with current=request.resolver_match.url_name %}
+      <nav aria-label="Main">
+        <a href="{% url 'home' %}" {% if current == 'home' %}aria-current="page"{% endif %}>Home</a>
+        <a href="{% url 'profile_session' %}" {% if current == 'profile_session' %}aria-current="page"{% endif %}>Read sentences</a>
+        <a href="{% url 'script_list' %}" {% if current in 'script_list script_new script_edit rehearse' %}aria-current="page"{% endif %}>Scripts</a>
+        <a href="{% url 'settings' %}" {% if current == 'settings' %}aria-current="page"{% endif %}>Settings</a>
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="link">Log out</button></form>
+      </nav>
+      {% endwith %}
+    {% endif %}
+  </header>
+
+  <main id="main">
+    {% if messages %}
+      <div class="messages" role="status">
+        {% for message in messages %}<p class="message {{ message.tags }}">{{ message }}</p>{% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

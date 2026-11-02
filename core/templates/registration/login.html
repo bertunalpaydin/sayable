@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+{% block title %}Log in · Sayable{% endblock %}
+
+{% block content %}
+<section class="narrow">
+  <h1>Log in</h1>
+  <form method="post" class="stack">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<p class="error">That username and password did not match. Try again.</p>{% endif %}
+    <label for="id_username">Username</label>
+    {{ form.username }}
+    <label for="id_password">Password</label>
+    {{ form.password }}
+    <input type="hidden" name="next" value="{{ next }}">
+    <button class="button primary">Log in</button>
+  </form>
+  <p class="muted">New here? <a href="{% url 'signup' %}">Create an account</a>.</p>
+</section>
+{% endblock %}

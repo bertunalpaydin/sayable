@@ -1,0 +1,20 @@
+{% extends "core/base.html" %}
+{% block title %}Create an account · Sayable{% endblock %}
+
+{% block content %}
+<section class="narrow">
+  <h1>Create an account</h1>
+  <p class="muted">Your profile and scripts are tied to this account.</p>
+  <form method="post" class="stack">
+    {% csrf_token %}
+    {% for field in form %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% for error in field.errors %}<p class="error small">{{ error }}</p>{% endfor %}
+      {% if field.help_text %}<div class="muted small help">{{ field.help_text|safe }}</div>{% endif %}
+    {% endfor %}
+    <button class="button primary">Create account</button>
+  </form>
+  <p class="muted">Already have one? <a href="{% url 'login' %}">Log in</a>.</p>
+</section>
+{% endblock %}

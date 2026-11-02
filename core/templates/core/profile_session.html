@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+{% block title %}Read sentences · Sayable{% endblock %}
+{% block page %}profile{% endblock %}
+
+{% block content %}
+<section data-session data-kind="profile" data-sentence-key="{{ sentence_key }}" data-record-url="{% url 'api_record' %}">
+  {% if progress.done < progress.target %}
+    <p class="step">Sentence {{ progress.done|add:1 }} of {{ progress.target }}</p>
+  {% else %}
+    <p class="step">Your profile is complete. Extra sentences make it more accurate.</p>
+  {% endif %}
+  <div class="progress" aria-hidden="true"><span style="width: {{ progress.percent }}%"></span></div>
+
+  <p class="reading sentence" data-text>{{ sentence }}</p>
+
+  {% include "core/recorder.html" %}
+  {% include "core/result.html" %}
+
+  <div class="actions" data-after hidden>
+    <a class="button primary" href="{% url 'profile_session' %}">Next sentence</a>
+    <button type="button" class="button" data-again>Try again</button>
+    <a class="link" href="{% url 'home' %}">See my results</a>
+  </div>
+  <p class="error" data-error role="alert" hidden></p>
+</section>
+
+<details class="tips">
+  <summary>Getting good results</summary>
+  <ul>
+    <li>Read at your normal speed, the way you would in a meeting. Don't slow down for the machine.</li>
+    <li>A quiet room helps. Background noise looks like pronunciation problems.</li>
+    <li>Each recording is turned into text and then deleted. Only the words are kept.</li>
+  </ul>
+</details>
+{% endblock %}

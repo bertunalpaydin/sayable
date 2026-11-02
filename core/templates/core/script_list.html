@@ -1,0 +1,23 @@
+{% extends "core/base.html" %}
+{% block title %}Scripts · Sayable{% endblock %}
+{% block page %}scripts{% endblock %}
+
+{% block content %}
+<div class="section-head">
+  <h1>Scripts</h1>
+  <a class="button primary" href="{% url 'script_new' %}">New script</a>
+</div>
+{% if scripts %}
+  <ul class="script-list">
+    {% for script in scripts %}
+      <li>
+        <a href="{% url 'script_edit' script.pk %}">{{ script.title }}</a>
+        <span class="muted small">{{ script.text|wordcount }} words, edited {{ script.updated_at|timesince }} ago</span>
+        <a class="link small" href="{% url 'rehearse' script.pk %}">Rehearse</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="lede">No scripts yet. Write or paste what you are going to say, then check it.</p>
+{% endif %}
+{% endblock %}

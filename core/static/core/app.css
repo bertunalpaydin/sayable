@@ -1,0 +1,307 @@
+/* Sayable. One idea carries the design: your own words, marked the way a
+   speech coach would mark them with a pencil. Everything else stays quiet. */
+
+:root {
+  --mist: #EEF2F0;
+  --paper: #FFFFFF;
+  --ink: #1D2B36;
+  --muted: #56666F;
+  --line: #D3DCD8;
+  --teal: #0F6E6E;
+  --teal-strong: #0A5656;
+  --teal-soft: #DCEBEA;
+  --high: #C2364C;
+  --medium: #A86A0C;
+  --good: #2F7D55;
+  --focus: #2B59C3;
+
+  --ui: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --read: "Literata", Georgia, "Times New Roman", serif;
+
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.6rem;
+  --step-3: 2.1rem;
+  --radius: 10px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mist: #111A1F;
+    --paper: #18242A;
+    --ink: #E4ECE9;
+    --muted: #9CAEB4;
+    --line: #2A3A41;
+    --teal: #4DB0AC;
+    --teal-strong: #6CC9C4;
+    --teal-soft: #1C3A3B;
+    --high: #FF7F90;
+    --medium: #E9B451;
+    --good: #6CC79B;
+    --focus: #8FB0FF;
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--mist);
+  color: var(--ink);
+  font: 400 var(--step-0)/1.55 var(--ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--teal-strong); text-underline-offset: 3px; }
+a:hover { color: var(--teal); }
+
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 16px; top: 8px; background: var(--paper); padding: 6px 10px; z-index: 10; }
+
+h1, h2, h3 { line-height: 1.2; margin: 0 0 0.6em; font-weight: 700; }
+h1 { font-size: var(--step-3); letter-spacing: -0.01em; }
+h2 { font-size: var(--step-2); }
+h3 { font-size: var(--step-1); }
+p { margin: 0 0 1em; }
+
+/* Header ------------------------------------------------------------ */
+
+.site {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 28px;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 20px 16px 8px;
+}
+
+.wordmark {
+  font-family: var(--read);
+  font-weight: 600;
+  font-size: 1.6rem;
+  color: var(--ink);
+  text-decoration: underline wavy var(--teal);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 7px;
+}
+
+.site nav { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px; }
+.site nav a, .site nav .link { color: var(--muted); text-decoration: none; font-size: 0.95rem; }
+.site nav a:hover, .site nav .link:hover { color: var(--ink); }
+.site nav a[aria-current="page"] { color: var(--ink); box-shadow: inset 0 -2px var(--teal); }
+.site nav form { margin: 0; }
+
+main { max-width: 1040px; margin: 0 auto; padding: 24px 16px 80px; }
+main > section, main > h1, main > form, main > .section-head, main > p { max-width: 720px; }
+
+/* Text styles --------------------------------------------------------- */
+
+.lede { font-size: 1.1rem; color: var(--muted); max-width: 62ch; }
+.muted { color: var(--muted); }
+.small { font-size: 0.9rem; }
+.error { color: var(--high); font-weight: 700; }
+.notice { background: var(--teal-soft); padding: 12px 14px; border-radius: var(--radius); }
+.step { color: var(--muted); margin-bottom: 8px; }
+
+/* The text you read aloud. Serif, large, generous spacing for marks. */
+.reading {
+  font-family: var(--read);
+  font-size: clamp(1.35rem, 1.1rem + 1.2vw, 1.85rem);
+  line-height: 1.75;
+  max-width: 34ch;
+  margin: 28px 0 32px;
+}
+.reading.piece { max-width: 40ch; }
+.check .reading { font-size: 1.25rem; max-width: 52ch; margin: 0; }
+
+/* Buttons and forms --------------------------------------------------- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 700 0.95rem/1.2 var(--ui);
+  text-decoration: none;
+  cursor: pointer;
+}
+.button:hover { border-color: var(--teal); color: var(--ink); }
+.button.primary { background: var(--teal); border-color: var(--teal); color: #fff; }
+.button.primary:hover { background: var(--teal-strong); border-color: var(--teal-strong); color: #fff; }
+.button.small { padding: 6px 12px; font-size: 0.85rem; }
+.button.danger { color: var(--high); border-color: var(--high); }
+.button:disabled { opacity: 0.45; cursor: not-allowed; }
+@media (prefers-color-scheme: dark) {
+  .button.primary, .button.primary:hover { color: #0B1B1B; }
+}
+
+.link { background: none; border: 0; padding: 0; color: var(--teal-strong); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.link.danger { color: var(--high); }
+
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 20px 0; }
+
+label { display: block; font-weight: 700; margin: 18px 0 6px; }
+label.choice { display: flex; gap: 10px; align-items: center; font-weight: 400; margin: 8px 0; }
+input[type="text"], input[type="password"], textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1rem/1.5 var(--ui);
+}
+textarea { font-family: var(--read); font-size: 1.05rem; line-height: 1.7; resize: vertical; }
+input:focus, textarea:focus { border-color: var(--teal); outline: none; box-shadow: 0 0 0 3px var(--teal-soft); }
+input[type="radio"], input[type="checkbox"] { accent-color: var(--teal); width: 18px; height: 18px; }
+fieldset { border: 0; padding: 0; margin: 0 0 28px; }
+legend { font-weight: 700; font-size: var(--step-1); margin-bottom: 6px; }
+.stack button { margin-top: 20px; }
+.narrow { max-width: 420px; }
+.help ul { margin: 4px 0; padding-left: 18px; }
+
+/* Progress and sounds ------------------------------------------------- */
+
+.progress, .bar { height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; margin: 6px 0 10px; }
+.progress span, .bar span { display: block; height: 100%; background: var(--teal); border-radius: inherit; }
+.intro .progress { max-width: 420px; margin-top: 24px; }
+
+.sounds { list-style: none; padding: 0; margin: 24px 0; }
+.sounds li { padding: 14px 0; border-top: 1px solid var(--line); }
+.sound-head { display: flex; align-items: baseline; gap: 10px; }
+.sound-name { font-size: var(--step-1); }
+.sound-rate { margin-left: auto; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sounds .bar span { background: var(--high); }
+.sounds p { margin: 4px 0 0; }
+
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.scripts-block { margin-top: 56px; }
+.script-list { list-style: none; padding: 0; margin: 0; }
+.script-list li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding: 12px 0; border-top: 1px solid var(--line); }
+.script-list li > a:first-child { font-weight: 700; font-size: 1.05rem; }
+.script-list .link { margin-left: auto; }
+
+/* Recorder ------------------------------------------------------------ */
+
+.recorder { display: flex; align-items: center; gap: 18px; margin: 8px 0 24px; }
+.record-label { margin: 0; font-weight: 700; }
+.recorder p.small { margin: 2px 0 0; min-height: 1.4em; }
+
+.record {
+  position: relative;
+  flex: none;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--teal);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.record:hover { background: var(--teal-strong); }
+.record-dot { width: 22px; height: 22px; border-radius: 50%; background: #fff; transition: border-radius 0.15s, transform 0.15s; }
+.record.is-recording { background: var(--high); }
+.record.is-recording .record-dot { border-radius: 4px; transform: scale(0.9); }
+.record.is-recording::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 3px solid var(--high);
+  animation: pulse 1.4s ease-out infinite;
+}
+.record.is-busy { background: var(--muted); cursor: progress; }
+.record.is-busy .record-dot { animation: spin 1s linear infinite; border-radius: 4px; }
+.record:disabled { cursor: progress; }
+
+@keyframes pulse { from { opacity: 0.9; transform: scale(0.95); } to { opacity: 0; transform: scale(1.25); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .record.is-recording::after, .record.is-busy .record-dot { animation: none; }
+}
+
+/* Marks: the signature of the app -------------------------------------- */
+
+.marked .word, .marked .mark, .legend .word, .legend .mark {
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+.word.is-misheard { text-decoration-style: wavy; text-decoration-color: var(--high); }
+.word.is-missed { text-decoration-style: solid; text-decoration-color: var(--high); color: var(--muted); }
+.word.is-unclear { text-decoration-style: wavy; text-decoration-color: var(--medium); }
+.word.is-ok { text-decoration: none; }
+.word[data-heard]::after {
+  content: " " attr(data-heard);
+  font-family: var(--ui);
+  font-size: 0.6em;
+  color: var(--high);
+  vertical-align: super;
+}
+
+.mark {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0 1px;
+  margin: 0;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.mark.is-high { text-decoration-style: wavy; text-decoration-color: var(--high); }
+.mark.is-medium { text-decoration-style: wavy; text-decoration-color: var(--medium); }
+.mark:hover, .mark[aria-pressed="true"] { background: var(--teal-soft); }
+.mark.is-prep { cursor: default; text-decoration-style: dotted; text-decoration-color: var(--medium); }
+.mark.is-prep.is-high { text-decoration-color: var(--high); }
+.mark.is-prep:hover { background: none; }
+
+.legend { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 22px; color: var(--muted); }
+
+/* Script check ------------------------------------------------------- */
+
+.check { margin-top: 40px; max-width: none !important; }
+.check-layout { display: grid; gap: 24px; align-items: start; margin: 16px 0; }
+@media (min-width: 900px) {
+  .check-layout { grid-template-columns: minmax(0, 1fr) 300px; }
+  .word-panel { position: sticky; top: 16px; }
+}
+.word-panel { background: var(--paper); border: 1.5px solid var(--line); border-radius: var(--radius); padding: 18px; }
+.word-panel h3 { font-family: var(--read); font-weight: 600; margin-bottom: 8px; }
+.options { list-style: none; padding: 0; margin: 12px 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.options-label { font-weight: 700; margin: 14px 0 0; }
+
+/* Rehearsal ------------------------------------------------------------ */
+
+.piece-nav { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.piece-nav .step { margin: 0; }
+
+/* Results, messages, misc --------------------------------------------- */
+
+.result { margin: 8px 0 0; }
+.result .reading { margin-top: 12px; }
+.messages { margin-bottom: 24px; max-width: 720px; }
+.message { padding: 10px 14px; border-radius: var(--radius); background: var(--teal-soft); margin: 0 0 8px; }
+.message.error { background: none; border: 1.5px solid var(--high); }
+
+.tips { margin-top: 48px; max-width: 720px; color: var(--muted); }
+.tips summary { cursor: pointer; font-weight: 700; color: var(--ink); }
+.danger-zone { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); }
+
+[hidden] { display: none !important; }
+
+@media (max-width: 560px) {
+  h1 { font-size: 1.75rem; }
+  .site { padding-top: 14px; }
+  .reading { margin: 20px 0 24px; }
+}

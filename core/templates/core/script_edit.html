@@ -1,0 +1,57 @@
+{% extends "core/base.html" %}
+{% block title %}{% if script %}{{ script.title }}{% else %}New script{% endif %} · Sayable{% endblock %}
+{% block page %}script{% endblock %}
+
+{% block content %}
+<h1>{% if script %}{{ script.title }}{% else %}New script{% endif %}</h1>
+
+<form method="post" class="script-form" data-script-form
+      data-check-url="{% url 'api_check' %}" data-suggest-url="{% url 'api_suggest' %}"
+      data-claude="{% if claude_on %}on{% endif %}">
+  {% csrf_token %}
+  <label for="{{ form.title.id_for_label }}">Title</label>
+  {{ form.title }}
+  {% for error in form.title.errors %}<p class="error">{{ error }}</p>{% endfor %}
+
+  <label for="{{ form.text.id_for_label }}">What you are going to say</label>
+  {{ form.text }}
+  {% for error in form.text.errors %}<p class="error">{{ error }}</p>{% endfor %}
+
+  <div class="actions">
+    <button type="button" class="button primary" data-check>Check script</button>
+    <button type="submit" class="button">{% if script %}Save changes{% else %}Save script{% endif %}</button>
+    {% if script %}<a class="button" href="{% url 'rehearse' script.pk %}">Rehearse</a>{% endif %}
+  </div>
+</form>
+
+<section class="check" data-check-panel hidden aria-live="polite">
+  <h2>Words to look at</h2>
+  <p data-check-summary></p>
+  <p class="notice" data-profile-note hidden>Your profile is still learning, so only words you have
+    already had trouble with are marked. <a href="{% url 'profile_session' %}">Read more sentences</a>
+    to get the full check.</p>
+  <div class="check-layout">
+    <p class="reading marked" data-check-text></p>
+    <aside class="word-panel" data-word-panel hidden>
+      <h3 data-panel-word></h3>
+      <p class="small" data-panel-reason></p>
+      <div data-panel-options></div>
+      <button type="button" class="button small" data-panel-claude hidden>Ask Claude for options that fit the sentence</button>
+      <p class="error small" data-panel-error hidden></p>
+    </aside>
+  </div>
+  <ul class="legend small">
+    <li><span class="mark is-high">word</span> likely to be misheard</li>
+    <li><span class="mark is-medium">word</span> might be misheard</li>
+  </ul>
+</section>
+<p class="error" data-error role="alert" hidden></p>
+
+{% if script %}
+  <form method="post" action="{% url 'script_delete' script.pk %}" class="danger-zone"
+        onsubmit="return confirm('Delete this script? This cannot be undone.');">
+    {% csrf_token %}
+    <button class="link danger">Delete script</button>
+  </form>
+{% endif %}
+{% endblock %}

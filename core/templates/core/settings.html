@@ -1,0 +1,44 @@
+{% extends "core/base.html" %}
+{% block title %}Settings · Sayable{% endblock %}
+{% block page %}settings{% endblock %}
+
+{% block content %}
+<h1>Settings</h1>
+
+<form method="post" class="settings-form">
+  {% csrf_token %}
+  <fieldset>
+    <legend>{{ form.sensitivity.label }}</legend>
+    {% for choice in form.sensitivity %}
+      <label class="choice">{{ choice.tag }} {{ choice.choice_label }}</label>
+    {% endfor %}
+  </fieldset>
+
+  <fieldset>
+    <legend>Claude</legend>
+    <p class="muted small">Without Claude, alternatives come from a built-in thesaurus and may not fit
+      every sentence. With Claude, the sentence and the word are sent to Anthropic's API to get options
+      that fit. Your recordings are never sent.</p>
+    <label class="choice">{{ form.use_claude }} {{ form.use_claude.label }}</label>
+    <label for="{{ form.claude_api_key.id_for_label }}">{{ form.claude_api_key.label }}</label>
+    {{ form.claude_api_key }}
+    <p class="muted small">
+      {% if has_key %}A key is saved. {{ form.claude_api_key.help_text }}
+      {% elif server_key %}This server has its own key, so you do not need one.
+      {% else %}Create a key at console.anthropic.com. Requests are billed to your Anthropic account.{% endif %}
+    </p>
+    {% if has_key %}<label class="choice">{{ form.remove_key }} {{ form.remove_key.label }}</label>{% endif %}
+  </fieldset>
+
+  <button class="button primary">Save settings</button>
+</form>
+
+<section class="danger-zone">
+  <h2>Your practice data</h2>
+  <p class="muted">Results from {{ recordings }} recording{{ recordings|pluralize }} are stored. Deleting them resets your profile. Scripts are kept.</p>
+  <form method="post" action="{% url 'delete_practice' %}" onsubmit="return confirm('Delete all your practice results? Your profile will start again.');">
+    {% csrf_token %}
+    <button class="button danger" {% if not recordings %}disabled{% endif %}>Delete practice results</button>
+  </form>
+</section>
+{% endblock %}
